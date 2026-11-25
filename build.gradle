@@ -4,78 +4,9 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
-ext {
-    set('springCloudVersion', "2025.1.4")
-}
-
-allprojects {
-    group = 'com.teamon5'
-    version = '0.0.1-SNAPSHOT'
-
-    repositories {
-        mavenCentral()
-        maven {
-            name = "GithubPackages"
-            url = uri("https://maven.pkg.github.com/teamon5/common-module")
-            credentials {
-                username = System.getenv("GITHUB_USERNAME") ?: findProperty("githubUsername")
-                password = System.getenv("GITHUB_TOKEN") ?: findProperty("githubToken")
-            }
-        }
-    }
-}
-
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
-        }
-    }
-
-    dependencyManagement {
-        imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        }
-    }
-
-    dependencies {
-        implementation 'com.teamon5:common-monitoring:0.2.0'
-        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
-        implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-        implementation 'org.springframework.boot:spring-boot-starter-kafka'
-        implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-        runtimeOnly 'com.mysql:mysql-connector-j'
-        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
-        testImplementation 'org.springframework.kafka:spring-kafka-test'
-        testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
-        testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
-        testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-        testCompileOnly 'org.projectlombok:lombok'
-        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-        testAnnotationProcessor 'org.projectlombok:lombok'
-    }
-
-    tasks.named('bootJar') {
-        enabled = false
-    }
-
-    tasks.named('jar') {
-        enabled = true
-    }
-
-    tasks.named('test') {
-        useJUnitPlatform()
-    }
-}
+group = 'com.teamon5'
+version = '0.0.1-SNAPSHOT'
+description = 'user-service'
 
 java {
     toolchain {
@@ -83,18 +14,23 @@ java {
     }
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+repositories {
+    mavenCentral()
+    maven {
+        name = "GithubPackages"
+        url = uri("https://maven.pkg.github.com/teamon5/common-module")
+        credentials {
+            username = System.getenv("GITHUB_USERNAME") ?: findProperty("githubUsername")
+            password = System.getenv("GITHUB_TOKEN") ?: findProperty("githubToken")
+        }
     }
 }
 
-dependencies {
-    implementation project(':auth-service')
-    implementation project(':member-service')
-    implementation project(':seller-service')
-    implementation project(':manager-service')
+ext {
+    set('springCloudVersion', "2025.1.4")
+}
 
+dependencies {
     implementation 'com.teamon5:common-monitoring:0.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -105,16 +41,27 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
-tasks.named('jar') {
-    enabled = false
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.named('jar') {
+    enabled = false
 }

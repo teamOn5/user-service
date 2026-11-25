@@ -1,9 +1,8 @@
-name: Deploy (prod) - User Service
+name: Deploy (prod) with ec2-instance
 
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch:
 
 env:
   SERVICE_NAME: user-service
@@ -17,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 1. 코드 체크아웃
+      - name: 1. 코스 체크아웃
         uses: actions/checkout@v4
 
       - name: 2. JDK 17 설치
