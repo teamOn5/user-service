@@ -1,0 +1,6 @@
+rootProject.name = 'user-service'
+
+include 'auth-service'
+include 'member-service'
+include 'seller-service'
+include 'manager-service'
