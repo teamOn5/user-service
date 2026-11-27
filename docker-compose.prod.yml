@@ -1,0 +1,23 @@
+services:
+  user-service:
+    image: ${DOCKER_USERNAME}/user-service:${IMAGE_TAG:-latest}
+    container_name: app-user-service
+    restart: always
+    ports:
+      - "8085:8080"
+    environment:
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx256m -XX:+UseG1GC"
+      SPRING_DATASOURCE_URL: jdbc:mysql://${DB_HOST}:3306/user_db?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATA_REDIS_HOST: ${SPRING_DATA_REDIS_HOST}
+      SPRING_DATA_REDIS_PORT: ${SPRING_DATA_REDIS_PORT}
+      SPRING_DATA_REDIS_PASSWORD: ${SPRING_DATA_REDIS_PASSWORD}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+      EUREKA_INSTANCE_IP_ADDRESS: ${BACKEND_EC2_PRIVATE_IP}
+      EUREKA_INSTANCE_NON_SECURE_PORT: 8085
+    deploy:
+      resources:
+        limits:
+          memory: 384M
